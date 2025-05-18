@@ -1,0 +1,44 @@
+{
+  "name": "use-stylex",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "homepage": "https://microui.org",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "tailwind.js",
+    "tailwind.d.ts"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinyhref/use-stylex.git"
+  },
+  "scripts": {
+    "build": "tsup src --dts",
+    "dev": "pnpm build:fast --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "build:fast": "tsup src",
+    "prepack": "clean-package",
+    "postpack": "clean-package restore"
+  },
+  "dependencies": {
+    "@stylexjs/stylex": "latest"
+  },
+  "peerDependencies": {},
+  "devDependencies": {
+    "@types/node": "^15.12.4",
+    "clean-package": "2.2.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3"
+  },
+  "clean-package": "./clean-package.config.json",
+  "packageManager": "yarn@1.22.22"
+}
