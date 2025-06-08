@@ -12,6 +12,7 @@ export type Classes<T> = {
     [key: string]: string
   }) : string;
 } & {
+  getProps: (...args: (keyof T | T[keyof T] | Tailwind)[]) => any;
   getClass: (...args: (keyof T | T[keyof T] | Tailwind)[]) => string;
   tailwind: (...args: Tailwind[]) => string;
 };
@@ -39,7 +40,7 @@ export const useStyleX = <T extends Record<string, any>>(xStyles: T, params: Use
     }
   });
 
-  classes.getClass = ((...args: (keyof T | T[keyof T] | Tailwind)[]): string => {
+  const getProps = ((...args: (keyof T | T[keyof T] | Tailwind)[]): string => {
     const styles = args.map((arg) => {
       if (typeof arg === 'string') {
         if (tailwindStyles[arg as Tailwind]) {
@@ -52,7 +53,11 @@ export const useStyleX = <T extends Record<string, any>>(xStyles: T, params: Use
       return arg;
     });
 
-    const props: any = (stylex as any)[funcKey](...styles);
+    return (stylex as any)[funcKey](...styles)
+  }) as Classes<T>['getProps'];
+
+  classes.getClass = ((...args: (keyof T | T[keyof T] | Tailwind)[]): string => {
+    const props: any = getProps(...args);
     return props[classKey];
   }) as Classes<T>['getClass'];
 
@@ -62,9 +67,10 @@ export const useStyleX = <T extends Record<string, any>>(xStyles: T, params: Use
     });
 
     const props = (stylex as any)[funcKey](...styles);
-
     return props[classKey];
   }) as Classes<T>['tailwind'];
+
+  classes.getProps = getProps;
 
   return {
     classes: classes as Classes<T>
