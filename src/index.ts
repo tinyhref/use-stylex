@@ -1,10 +1,12 @@
 import * as stylex from '@stylexjs/stylex';
+import type { Theme } from '@stylexjs/stylex';
 import { tailwindStyles } from './tailwind';
 
 import type { Tailwind } from './types';
 
 type UseStyleXParams = {
   isWithAttrs?: boolean;
+  theme?: Theme<any, any>
 };
 
 export type Classes<T> = {
@@ -20,7 +22,7 @@ export type Classes<T> = {
 export const useStyleX = <T extends Record<string, any>>(xStyles: T, params: UseStyleXParams = {}): {
   classes: Classes<T>
 } => {
-  const { isWithAttrs = false } = params;
+  const { isWithAttrs = false, theme } = params;
 
   const classKey = isWithAttrs ? 'class' : 'className';
   const funcKey = isWithAttrs ? 'attrs' : 'props';
@@ -52,6 +54,10 @@ export const useStyleX = <T extends Record<string, any>>(xStyles: T, params: Use
 
       return arg;
     });
+
+    if (theme) {
+      return (stylex as any)[funcKey](theme, ...styles)
+    }
 
     return (stylex as any)[funcKey](...styles)
   }) as Classes<T>['getProps'];
